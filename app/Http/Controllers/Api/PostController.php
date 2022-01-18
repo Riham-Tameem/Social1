@@ -33,6 +33,11 @@ class PostController extends BaseController
         return $this->post->store($request->all());
 
     }
+    public function share(CreateRequest $request)
+    {
+        return $this->post->share($request->all());
+
+    }
     public function show($id)
     {
         return $this->post->show($id);

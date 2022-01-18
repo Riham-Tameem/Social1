@@ -35,7 +35,7 @@ Route::middleware('auth:api')->group( function () {
 
     Route::resource('posts', PostController::class);
     Route::post('/favourite',[PostController::class,'favourite']);
-
+    Route::post('/share',[PostController::class,'share']);
 
     Route::post('/comment',[CommentController::class,'comment']);
     Route::put('/editComment/{comments}',[CommentController::class,'editComment']);

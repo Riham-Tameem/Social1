@@ -6,6 +6,8 @@ use App\Http\Resources\LikeResource;
 use App\Http\Resources\PostResource;
 use App\Models\Favorite;
 use App\Models\Friend;
+use App\Models\Image;
+use App\Models\Images;
 use App\Models\Like;
 use App\Models\Post;
 use App\Http\Controllers\Api\BaseController;
@@ -64,26 +66,58 @@ class PostEloquent extends BaseController
 
     public function store(array $data)
     {
+      //  dd($data);
         $authUser = Auth::user();
-        $image = $data['image'] ?? null;
+        /*$image = $data['image'] ?? null;
         if ($image != null) {
             $filename = $data['image']->store('public/images');
             $imagename = $data['image']->hashName();
             $data['image'] = $imagename;
-        }
-        $post = Post::create($data);
+        }*/
+      //  $post= new Post();
+       $post= Post::create([
+            'text'=>$data['text'],
+        ]);
+      //  $post->text=$data['text'];
         $post->user_id = $authUser->id;
+      //  dd($data['images']);
+        if (isset($data['images']) ) {
+            foreach ($data['images'] as $image) {
+               $postImage = new Image();
+                $postImage->post_id = $post->id;
+               // dd($post->id);
+             /*   $filename = $image->store('public/images');
+                $imageName = $image->hashName();
+                Image::updateOrCreate([
+                    'image'=>$imageName,
+                    'post_id' => $post->id,
+                ]);*/
+                $filename = $image->store('public/images');
+                $imagename = $image->hashName();
+                $postImage->image = ($imagename);
+                $postImage->save();
+            }
+        }
         if ($post->save()) {
             $friends = Friend::where('user_id', $authUser->id)->pluck('friend_id')->toArray();
 
             foreach ($friends as $friend_id)
                 $this->notification->sendNotification($authUser->id, $friend_id, 'post', $post->id);
         }
-
-
         return $this->sendResponse('add post successfully', new PostResource($post));
     }
-
+    public function share(array $data)
+    {
+        //  dd($data);
+        $authUser = Auth::user();
+        $postFind=Post::find($data['post_id']);
+        $post= Post::create([
+            'text'=>$data['text'],
+            'share_post_id'=>$postFind->id,
+        ]);
+        $post->user_id = $authUser->id;
+        return $this->sendResponse('share post successfully', new PostResource($post));
+    }
     public function show($id)
     {
         $post = Post::find($id);
@@ -98,16 +132,33 @@ class PostEloquent extends BaseController
         $user = auth()->user()->id;
         $post = Post::find($id);
         //dd($data);
-        $image = $data['image'] ?? null;
+       // $image = $data['image'] ?? null;
         if ($user == $post->user_id) {
-            if ($image != null) {
+           /* if ($image != null) {
                 // $image = $request->file('image');
                 $filename = $data['image']->store('public/images');
                 $imagename = $data['image']->hashName();
                 $data['image'] = $imagename;
                 $post->image = $data['image'];
-            }
+            }*/
             $post->text = $data['text'];
+            if (isset($data['images']) ) {
+                foreach ($data['images'] as $image) {
+                    $postImage = Image::where('post_id',$post->id)->first();
+                    //$postImage->post_id = $post->id;
+                    // dd($post->id);
+                    /*   $filename = $image->store('public/images');
+                       $imageName = $image->hashName();
+                       Image::updateOrCreate([
+                           'image'=>$imageName,
+                           'post_id' => $post->id,
+                       ]);*/
+                    $filename = $image->store('public/images');
+                    $imagename = $image->hashName();
+                    $postImage->image = ($imagename);
+                    $postImage->save();
+                }
+            }
             $post->update();
             ///$post->update($data);
             return $this->sendResponse('update post successfully', new PostResource($post));
