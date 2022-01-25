@@ -21,13 +21,13 @@ class PostEloquent extends BaseController
 {
     private $model;
     private $notification;
-    private $userEloquent;
+    //private $userEloquent;
 
-    public function __construct(Post $post, NotificationEloquent $notificationEloquent, UserEloquent $userEloquent)
+    public function __construct(Post $post, NotificationEloquent $notificationEloquent)
     {
         $this->model = $post;
         $this->notification = $notificationEloquent;
-        $this->userEloquent = $userEloquent;
+      //  $this->userEloquent = $userEloquent;
     }
 
     public function view(array $data)
@@ -122,7 +122,8 @@ class PostEloquent extends BaseController
     {
         $post = Post::find($id);
         if (!$post) {
-            return response()->json(['error' => ' Invalid Post ID']);
+            return $this->sendError(404,' Invalid Post ID');
+          //  return response()->json(['error' => ' Invalid Post ID']);
         }
         return $this->sendResponse('Show post', new PostResource($post));
     }
@@ -195,10 +196,11 @@ class PostEloquent extends BaseController
 
         } elseif ($like) {
             $like->delete();
-            return response([
+          /*  return response([
                 'errorr' => '200',
                 'message' => 'like has been delete ',
-            ]);
+            ]);*/
+            return $this->sendResponse('like has been delete ',[]);
 
         }
         $like = like::create([

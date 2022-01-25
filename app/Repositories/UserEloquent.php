@@ -90,9 +90,11 @@ class UserEloquent extends BaseController
         $myFriend = Friend::where('user_id', $user)->pluck('friend_id')->toArray();
         // $addUser=auth()->user()->friends()->attach([$id]);
         if (in_array($friend_ids, $myFriend)) {
-            return response(['success' => '200',
+            /*return response(['success' => '200',
                 'message' => 'friend already exists',
-            ]);
+            ]);*/
+            return $this->sendResponse('friend already exists  ', []);
+
         }
         $addFriend = Friend::create([
             'friend_id' => $data['friend_id'],
