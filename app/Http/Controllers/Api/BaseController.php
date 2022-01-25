@@ -14,18 +14,19 @@ class BaseController extends Controller
                 'status'     => true,
                 'statusCode' => 200,
                 'message'    => $message,
-                'item'       => $result,
+                'data'       => $result,
             ];
             return response()->json($response);
       //  }
 
     }
-    public function sendError($error)
+    public function sendError($statusCode,$error)
     {
         $response = [
-            'error'     => false,
-            'statusCode' => 404,
+            'status'     => false,
+            'statusCode' => $statusCode,
             'message' => $error,
+            'data' => [],
         ];
 
 //        if(!empty($errorMessages)){

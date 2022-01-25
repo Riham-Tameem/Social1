@@ -42,8 +42,11 @@ class UserEloquent extends BaseController
         $response = Route::dispatch($proxy);
         $statusCode = $response->getStatusCode();
         $response = json_decode($response->getContent());
-        if ($statusCode != 200)
-            return $this->sendError($response->message);
+        if ($statusCode != 200){
+           return $this->sendError(401,$response->message);
+            //return response()->json(['status' => false, 'statusCode' => 401, 'message' => $response->message,'data'=> [] ]);
+
+        }
         $response_token = $response;
         $token = $response->access_token;
         \request()->headers->set('Authorization', 'Bearer ' . $token);
@@ -54,7 +57,7 @@ class UserEloquent extends BaseController
         $statusCode = $response->getStatusCode();
         //dd(json_decode($response->getContent()));
         //  dd($response->getContent());
-        $user = json_decode($response->getContent())->item;
+        $user = json_decode($response->getContent())->data;
 
 
         if (isset($user)) {
@@ -102,7 +105,9 @@ class UserEloquent extends BaseController
     {
         $user = Auth::user()->token();
         $user->revoke();
-        return response(['message' => 'user has been log out successfully '], 200);
+        return $this->sendResponse('user has been log out successfully', []);
+
+      //  return response(['message' => 'user has been log out successfully '], 200);
     }
 
     public function viewProfile(array $data)
@@ -116,7 +121,8 @@ class UserEloquent extends BaseController
         } else {
             $user_info = User::find($data['id']);
             if (!$user_info) {
-                return $this->sendError('There is no User has this id');
+                return $this->sendError(404,'There is no User has this id');
+                //return $this->sendError();
             }
             return $this->sendResponse('user info', new UserResource($user_info));
         }
@@ -152,7 +158,9 @@ class UserEloquent extends BaseController
             //dd($friend_list);
             return $this->sendResponse('Success', FriendResource::collection($friend_list));
         }
-        return $this->sendError('no friends');
+        return $this->sendError(404, 'no friends');
+
+       // return $this->sendError('no friends');
 
 
     }
@@ -170,7 +178,8 @@ class UserEloquent extends BaseController
             ->where('friend_id', $friend_id)
             ->get();
         $friend->delete();
-        return response()->json(['success' => 'friend deleted successfully']);
+        return $this->sendResponse('friend deleted successfully', []);
+       // return response()->json(['success' => 'friend deleted successfully']);
 
     }
 
@@ -182,18 +191,20 @@ class UserEloquent extends BaseController
             'new_password_confirmation' => 'required',
         ]);
         if ($validator->fails()) {
-            return response(['errors' => $validator->errors()->all()], 422);
+            return $this->sendError( 422,   $validator->errors()->all());
+            // return response(['errors' => $validator->errors()->all()], 422);
         }
         $user_id = auth()->user()->id;
         if ((Hash::check(request('old_password'), auth()->user()->password)) == false) {
             $message = "in correct old password";
-            return $this->sendError($message);
+            return $this->sendError(422, $message);
         } else {
             //User::where('id', $user_id)->update(['password' => Hash::make($input['new_password'])]);
             User::where('id', $user_id)->update(['password' => bcrypt($data['new_password'])]);
             $message = "Success change password";
         }
-        return $this->sendResponse($message, '');
+        return $this->sendResponse($message, []);
+     //   return response()->json(['status' => true, 'statusCode' => 200, 'message' => $message]);
 
     }
 
@@ -219,7 +230,8 @@ class UserEloquent extends BaseController
             'name' => 'required',
         ]);
         if ($validator->fails()) {
-            return response(['errors' => $validator->errors()->all()], 422);
+            return $this->sendError(422, $validator->errors()->all());
+          //  return response(['errors' => $validator->errors()->all()], 422);
         }
         $name = $data['name'];
         $user = User::where('name', $name)->first();

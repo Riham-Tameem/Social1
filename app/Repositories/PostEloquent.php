@@ -163,7 +163,8 @@ class PostEloquent extends BaseController
             ///$post->update($data);
             return $this->sendResponse('update post successfully', new PostResource($post));
         } else {
-            return $this->sendError('you are un authorised');
+            return $this->sendError(401,'you are un authorised');
+            //return $this->sendError('you are un authorised');
         }
     }
 
@@ -173,13 +174,14 @@ class PostEloquent extends BaseController
 
         $post = Post::find($id);
         if (!$post) {
-            return $this->sendError('Invalid Post ID');
+            return $this->sendError(404,'Invalid Post ID');
         }
         if ($user == $post->user_id) {
             $post->delete();
-            return response()->json(['success' => 'Post deleted successfully']);
+            return $this->sendResponse('Post deleted successfully',[]);
+          //  return response()->json(['success' => 'Post deleted successfully']);
         } else {
-            return $this->sendError('you are un authorised');
+            return $this->sendError(401,'you are un authorised');
         }
     }
 
@@ -189,7 +191,7 @@ class PostEloquent extends BaseController
         $post = Post::find($request);
         $like = Like::where("post_id", "like", "%$request%")->first();
         if (!$post) {
-            return $this->sendError('There is no Post has this id');
+            return $this->sendError(404 ,'There is no Post has this id');
 
         } elseif ($like) {
             $like->delete();
@@ -213,7 +215,7 @@ class PostEloquent extends BaseController
         $post = Post::find($data['post_id']);
         $user = Auth::user()->id;
         if (!$post) {
-            return $this->sendError('There is no Post has this id');
+            return $this->sendError(404 ,'There is no Post has this id');
         }
         $favourites = Favorite::create([
             'post_id' => $post->id,

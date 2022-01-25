@@ -22,7 +22,7 @@ class CommentEloquent extends BaseController
         $user=auth()->user()->id;
         $post=Post::find($find_post);
         if(! $post){
-            return $this->sendError(  'There is no Post has this id');
+            return $this->sendError(  404,'There is no Post has this id');
         }
         $comments = Comment::create([
             'post_id' =>$post->id,
@@ -42,7 +42,7 @@ class CommentEloquent extends BaseController
         $comment=Comment::find($comment_id);
         $user=auth()->user()->id;
         if(!$comment ){
-            return $this->sendError(  'There is no Comment has this id');
+            return $this->sendError(  404,'There is no Comment has this id');
         }
         else{
             if($user == $comment->user_id){
@@ -50,7 +50,7 @@ class CommentEloquent extends BaseController
                 $comment->save();
                 return $this->sendResponse( 'comment updated success', new CommentResource($comment),);
             }else{
-                return $this->sendError(  'you are un authorised');
+                return $this->sendError(  401,'you are un authorised');
             }
         }
     }
@@ -59,16 +59,17 @@ class CommentEloquent extends BaseController
         $comment=Comment::find($id);
         $user=auth()->user()->id;
         if(!$comment ){
-            return $this->sendError(  'There is no Comment has this id');
+            return $this->sendError(  404,'There is no Comment has this id');
         }else {
             if ($user == $comment->user_id) {
                 $comment->delete();
-                return response([
-                    'errorr' => '200',
+                return $this->sendResponse('the comment deleted successfully',[]);
+                /*return response([
+                    'error' => '200',
                     'message' => 'the comment deleted successfully',
-                ]);
+                ]);*/
             } else {
-                return $this->sendError(  'you are un authorised');
+                return $this->sendError(  401,'you are un authorised');
             }
         }
     }
