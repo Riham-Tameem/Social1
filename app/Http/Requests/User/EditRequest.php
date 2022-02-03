@@ -25,9 +25,8 @@ class EditRequest extends FormRequest
     {
         $id = auth()->user()->id ;
         return [
-            'name'=>'required',
-            'email'=>'required| email|unique:users,email,'.$id,
-            'image'=>'required | image'
+            'email'=>'email|unique:users,email,'.$id,
+            'image'=>' image'
         ];
     }
 }

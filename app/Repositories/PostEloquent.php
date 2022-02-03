@@ -190,7 +190,8 @@ class PostEloquent extends BaseController
     {
         $request = $data['post_id'];
         $post = Post::find($request);
-        $like = Like::where("post_id", "like", "%$request%")->first();
+        $like = Like::where("post_id", "like", "%$request%")
+            ->where('user_id',Auth::user()->id)->first();
         if (!$post) {
             return $this->sendError(404 ,'There is no Post has this id');
 

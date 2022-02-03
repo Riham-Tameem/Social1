@@ -213,16 +213,16 @@ class UserEloquent extends BaseController
     public function editUser(array $data)
     {
         $user = Auth::user();
-        $user->name = $data['name'];
-        $user->email = $data['email'];
-        if ($data['image'] != 'undefined') {
+        /*$user->name = $data['name'];
+        $user->email = $data['email'];*/
+        if (isset($data['image'] )) {
             // $image = $request->file('image');
             $filename = $data['image']->store('public/images');
             $imagename = $data['image']->hashName();
             $data['image'] = $imagename;
+            $user->image = $data['image'];
         }
-        $user->image = $data['image'];
-        $user->update();
+        $user->update($data);
         return $this->sendResponse('Success editUser', $user);
     }
 
