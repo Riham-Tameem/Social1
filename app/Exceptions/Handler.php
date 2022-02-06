@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
                     'status'=>false,
                     'statusCode'=>422,
                     'message'=>$message,
-                    'data'=>['errors'=>(object)$errors],
+                    'data'=>['errors'=>$errors],
                 ]);
 
             }
