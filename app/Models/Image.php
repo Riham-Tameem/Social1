@@ -16,5 +16,9 @@ class Image extends Model
     {
         return $this->belongsTo(Post::class);
     }
+    public function getImageAttribute($value)
+    {
+        return url('storage/'.$value);
+    }
 
 }

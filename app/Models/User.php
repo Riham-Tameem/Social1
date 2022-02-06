@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(LinkedSocialAccount::class);
     }
+
+    public function getImageAttribute($value)
+    {
+        return url('storage/'.$value);
+    }
 }

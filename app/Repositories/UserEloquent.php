@@ -219,9 +219,9 @@ class UserEloquent extends BaseController
         $user->email = $data['email'];*/
         if (isset($data['image'] )) {
             // $image = $request->file('image');
-            $filename = $data['image']->store('public/images');
-            $imagename = $data['image']->hashName();
-            $data['image'] = $imagename;
+            $filename = $data['image']->store('images');
+//            $imagename = $data['image']->hashName();
+            $data['image'] = $filename;
             $user->image = $data['image'];
         }
         $user->update($data);

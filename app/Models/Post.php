@@ -15,6 +15,7 @@ class Post extends Model
     protected $guarded = [];
     protected $appends = ['date'];
 
+
     public function getDateAttribute()
     {
        $date= Carbon::parse($this->created_at)->diffForHumans();

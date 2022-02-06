@@ -92,9 +92,9 @@ class PostEloquent extends BaseController
                     'image'=>$imageName,
                     'post_id' => $post->id,
                 ]);*/
-                $filename = $image->store('public/images');
-                $imagename = $image->hashName();
-                $postImage->image = ($imagename);
+                $filename = $image->store('images');
+               // $imagename = $image->hashName();
+                $postImage->image = ($filename);
                 $postImage->save();
             }
         }
