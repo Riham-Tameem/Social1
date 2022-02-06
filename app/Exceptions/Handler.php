@@ -42,7 +42,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        if ($e instanceof ValidationException){
+   if ($e instanceof ValidationException){
             if ($request->wantsJson()){
                 $errors = [];
                 $error = [];
@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
                     'status'=>false,
                     'statusCode'=>422,
                     'message'=>$message,
-                    'items'=>$errors,
+                    'data'=>['errors'=>(object)$errors],
                 ]);
 
             }

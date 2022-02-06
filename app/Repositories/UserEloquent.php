@@ -42,7 +42,9 @@ class UserEloquent extends BaseController
         $response = Route::dispatch($proxy);
         $statusCode = $response->getStatusCode();
         $response = json_decode($response->getContent());
+       // dd($response);
         if ($statusCode != 200){
+           // dd('fff');
            return $this->sendError(401,$response->message);
             //return response()->json(['status' => false, 'statusCode' => 401, 'message' => $response->message,'data'=> [] ]);
 
