@@ -20,7 +20,8 @@ class PostResource extends JsonResource
             'image'=> $this->images,
             'date'=>$this->date,
             'user' => $this->user,
-            'comments'=>$this->comments,
+           // 'comments'=>$this->comments,
+            'comments' =>  CommentResource::collection($this->comments),
             'share' =>$this->share,
 
         ];
