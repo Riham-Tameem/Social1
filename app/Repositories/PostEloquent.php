@@ -108,14 +108,13 @@ class PostEloquent extends BaseController
     }
     public function share(array $data)
     {
-        //  dd($data);
-        $authUser = Auth::user();
-        $postFind=Post::find($data['post_id']);
-        $post= Post::create([
+        $data['user_id']=Auth::user()->id;
+        $post = Post::findOrFail($data['post_id']);
+        $post=Post::create([
             'text'=>$data['text'],
-            'share_post_id'=>$postFind->id,
+            'user_id'=>$data['user_id'],
+            'share_post_id'=>$post->id,
         ]);
-        $post->user_id = $authUser->id;
         return $this->sendResponse('share post successfully', new PostResource($post));
     }
     public function show($id)

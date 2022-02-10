@@ -40,7 +40,7 @@ Route::middleware('auth:api')->group( function () {
     Route::post('/comment',[CommentController::class,'comment']);
     Route::put('/editComment/{comments}',[CommentController::class,'editComment']);
     Route::delete('/deleteComment/{comments}',[CommentController::class,'deleteComment']);
-
+    Route::get('/getNotification',[CommentController::class,'getNotification']);
 
     Route::post('/like',[HomeController::class,'like']);
 

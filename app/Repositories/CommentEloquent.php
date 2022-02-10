@@ -4,7 +4,9 @@ namespace App\Repositories;
 
 use App\Http\Controllers\Api\BaseController;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\NotificationResource;
 use App\Models\Comment;
+use App\Models\FcmNotification;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -72,5 +74,16 @@ class CommentEloquent extends BaseController
                 return $this->sendError(  401,'you are un authorised');
             }
         }
+    }
+
+
+    public function getNotification(){
+        $user=auth()->user()->id;
+        $notification=FcmNotification::where('receiver_id',$user)->get();
+        if($notification){
+            return $this->sendResponse('successfully',NotificationResource::collection($notification));
+        }
+        return $this->sendError(  404,'no notification');
+
     }
 }

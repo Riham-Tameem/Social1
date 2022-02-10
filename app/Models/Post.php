@@ -28,7 +28,7 @@ class Post extends Model
     }
     public function share()
     {
-        return $this->belongsTo($this ,'share_post_id');
+        return $this->belongsTo(Post::class ,'share_post_id');
     }
     public function comments()
     {
@@ -36,7 +36,9 @@ class Post extends Model
     }
     public function likes()
     {
-        return $this->hasMany(Like::class);
+        return $this->belongsToMany(User::class,'likes','post_id','user_id','id','id');//->whereNull('favorites.deleted_at');
+
+        //return $this->hasMany(Like::class);
     }
     public function images()
     {

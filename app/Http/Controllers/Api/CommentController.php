@@ -30,4 +30,10 @@ class CommentController extends BaseController
         return $this->comment->deleteComment($id);
     }
     ////////////********** end Comment ***********////////
+    ///
+    ///
+
+    public function getNotification(){
+        return $this->comment->getNotification();
+    }
 }

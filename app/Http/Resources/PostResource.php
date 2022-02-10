@@ -14,15 +14,16 @@ class PostResource extends JsonResource
      */
     public function toArray($request)
     {
+        $is_like = $this->likes()->where('users.id',auth()->user()->id)->first();
         return [
             'id' => $this->id,
             'text' => $this->text,
             'image'=> $this->images,
             'date'=>$this->date,
             'user' => $this->user,
-           // 'comments'=>$this->comments,
-            'comments' =>  CommentResource::collection($this->comments),
-            'share' =>$this->share,
+            'is_like'=>$is_like?true:false,
+           'comments' =>  CommentResource::collection($this->comments),
+            'share' =>new PostResource($this->share),
 
         ];
     }
