@@ -48,7 +48,7 @@ class User extends Authenticatable
     }
 
     public function friends(){
-        return $this->belongsToMany(User::class,'friends','user_id','friend_id');
+        return $this->belongsToMany(User::class,'friends','user_id','friend_id','id','id');
     }
     public function comments()
     {
@@ -67,8 +67,14 @@ class User extends Authenticatable
         return $this->hasMany(LinkedSocialAccount::class);
     }
 
+   public function fcmNotification(){
+
+        return $this->hasMany(FcmNotification::class);
+
+    }
     public function getImageAttribute($value)
     {
+        if (isset($value))
         return url('storage/'.$value);
     }
 }

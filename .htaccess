@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+   <Files .env>
+       order allow,deny
+       Deny from all
+   </Files>
+</IfModule>

@@ -12,4 +12,7 @@ class Friend extends Model
         'friend_id',
         'user_id'
     ];
+    function users(){
+        return $this->belongsTo(User::class,'friend_id');
+    }
 }

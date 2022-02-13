@@ -98,11 +98,16 @@ class UserEloquent extends BaseController
             return $this->sendResponse('friend already exists  ', []);
 
         }
-        $addFriend = Friend::create([
-            'friend_id' => $data['friend_id'],
-            'user_id' => $user,
-        ]);
-        return $this->sendResponse('friend already exists', $addFriend);
+        $is_exists=User::where('id',$data['friend_id'])->first();
+        if($is_exists){
+            $addFriend = Friend::create([
+                'friend_id' => $data['friend_id'],
+                'user_id' => $user,
+            ]);
+            return $this->sendResponse('add friend Successfully ', new FriendResource($addFriend));
+        }
+        return $this->sendError(404, 'no user with this id');
+
     }
 
     public function logout(array $data)
@@ -153,19 +158,25 @@ class UserEloquent extends BaseController
     public function friendlist()
     {
 
-        $user = auth()->user()->id;
-        // dd($user);
-        $friends = Friend::where('user_id', $user)->first();
-        // dd($friends);
-        if ($friends) {
-            $friend_list = User::where('id', $friends->friend_id)->get();
-            //dd($friend_list);
-            return $this->sendResponse('Success', FriendResource::collection($friend_list));
-        }
-        return $this->sendError(404, 'no friends');
+//        $user = auth()->user()->id;
+//        // dd($user);
+//        $friends = Friend::where('user_id', $user)->get();
+//     //  dd($friends);
+//        $my_friend_list=[];
+//        if ($friends) {
+//        foreach ($friends as $friend){
+//            $friend_list = Friend::where('friend_id', $friend->friend_id)->get();
+//            $my_friend_list []=$friend_list;
+//        }
+////   dd($my_friend_list);
+//            return $this->sendResponse('Success',FriendResource::collection($my_friend_list));
+//        }
+//        return $this->sendError(404, 'no friends');
+//
+//       // return $this->sendError('no friends');
 
-       // return $this->sendError('no friends');
 
+            return $this->sendResponse('Success',FriendResource::collection(\auth()->user()->friends));
 
     }
 
@@ -180,9 +191,12 @@ class UserEloquent extends BaseController
         $friend_id = $data['friend_id'];
         $friend = Friend::where('user_id', auth()->user()->id)
             ->where('friend_id', $friend_id)
-            ->get();
-        $friend->delete();
-        return $this->sendResponse('friend deleted successfully', []);
+            ->first();
+        if($friend){
+            $friend->delete();
+            return $this->sendResponse('friend deleted successfully', []);
+
+        }
        // return response()->json(['success' => 'friend deleted successfully']);
 
     }
