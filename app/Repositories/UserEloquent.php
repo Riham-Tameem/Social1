@@ -104,7 +104,7 @@ class UserEloquent extends BaseController
                 'friend_id' => $data['friend_id'],
                 'user_id' => $user,
             ]);
-            return $this->sendResponse('add friend Successfully ', new FriendResource($addFriend));
+            return $this->sendResponse('add friend Successfully ', []);
         }
         return $this->sendError(404, 'no user with this id');
 
@@ -253,7 +253,9 @@ class UserEloquent extends BaseController
         }
         $name = $data['name'];
         $user = User::where('name', $name)->first();
+        $posts=Post::where('user_id',$user->id)->get();
         //  dd($user);
-        return $this->sendResponse('user info', new UserResource($user));
+
+        return $this->sendResponse('user info', ['user' =>new UserResource($user),'user_posts'=>PostResource::collection($posts)]);
     }
 }

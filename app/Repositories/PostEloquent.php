@@ -53,9 +53,11 @@ class PostEloquent extends BaseController
             ->take($page_size)
             ->get();
         // dd($total_page);
-        return $this->sendResponse(
+       /* return $this->sendResponse(
             'total_record => ' . $total_page . ',  page_number =>  ' . $current_page . ',   page_size  =>' . $page_size
-            , PostResource::collection($posts));
+            , PostResource::collection($posts));*/
+        return $this->sendResponse('all posts',['pagination'=>  'total_record => ' . $total_page . ',  page_number =>  ' . $current_page . ',   page_size  =>' . $page_size ,
+          'posts'=>  PostResource::collection($posts)]);
     }
 
     public function index()
