@@ -79,6 +79,7 @@ class PostEloquent extends BaseController
       //  $post= new Post();
        $post= Post::create([
             'text'=>$data['text'],
+           'user_id' =>$authUser->id,
         ]);
       //  $post->text=$data['text'];
         $post->user_id = $authUser->id;

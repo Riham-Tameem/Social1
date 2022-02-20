@@ -174,10 +174,11 @@ class UserEloquent extends BaseController
 //        return $this->sendError(404, 'no friends');
 //
 //       // return $this->sendError('no friends');
-
-
-            return $this->sendResponse('Success',FriendResource::collection(\auth()->user()->friends));
-
+             $friends=\auth()->user()->friends;
+             if($friends){
+                 return $this->sendResponse('friend list ',FriendResource::collection($friends));
+             }
+        return $this->sendError(404, 'no friends');
     }
 
     public function removefriend(array $data)
