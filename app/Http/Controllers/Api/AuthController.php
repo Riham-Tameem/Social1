@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\User\ChangePassword;
 use App\Http\Requests\User\EditRequest;
 use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\RegisterRequest;
@@ -59,7 +60,7 @@ class AuthController extends BaseController
     {
         return $this->user->removefriend($request->all());
     }
-    public function changePassword(Request $request){
+    public function changePassword(ChangePassword $request){
         return $this->user->changePassword($request->all());
     }
     public function editUser(EditRequest $request){

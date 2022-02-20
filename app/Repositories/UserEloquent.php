@@ -204,15 +204,15 @@ class UserEloquent extends BaseController
 
     function changePassword(array $data)
     {
-        $validator = Validator::make($data, [
-            'old_password' => 'required',
-            'new_password' => 'required|min:6|confirmed',
-            'new_password_confirmation' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError( 422,   $validator->errors()->all());
-            // return response(['errors' => $validator->errors()->all()], 422);
-        }
+//        $validator = Validator::make($data, [
+//            'old_password' => 'required',
+//            'new_password' => 'required|min:6|confirmed',
+//            'new_password_confirmation' => 'required',
+//        ]);
+//        if ($validator->fails()) {
+//            return $this->sendError( 422,   $validator->errors()->all());
+//            // return response(['errors' => $validator->errors()->all()], 422);
+//        }
         $user_id = auth()->user()->id;
         if ((Hash::check(request('old_password'), auth()->user()->password)) == false) {
             $message = "in correct old password";
